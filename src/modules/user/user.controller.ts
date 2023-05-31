@@ -24,6 +24,7 @@ import { User } from './user.entity';
 import { UserService } from './user.service';
 import { PaginationDto } from '../../infra/shared/dto';
 import { Route } from '../../infra/shared/decorators/route.decorator';
+import { Public } from '../auth/decorators/public.decorator';
 
 @ApiTags('User')
 @Controller('user')
@@ -54,6 +55,7 @@ export class UserController {
     return this.userService.getOne(id);
   }
 
+  @Public()
   @Post('/')
   @ApiOperation({ summary: 'Method: creates new user' })
   @ApiCreatedResponse({

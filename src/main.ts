@@ -1,10 +1,32 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
+import { ValidationPipe } from '@nestjs/common';
+import { AccessTokenUserGuard } from './modules/auth/passport-stratagies/access-token-user/access-token-user.guard';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['log', 'warn', 'error'],
+  });
 
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
+  app.use(cookieParser());
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      forbidUnknownValues: true,
+      transform: true,
+    }),
+  );
+
+  const reflector = app.get(Reflector);
+  app.useGlobalGuards(new AccessTokenUserGuard(reflector));
   const config = new DocumentBuilder()
     .setTitle('Itransition task 4')
     .setDescription('Itransition task 4 API description')
