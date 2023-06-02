@@ -106,8 +106,6 @@ export class UserService {
       });
       return user;
     } catch (error) {
-      console.log(error.detail);
-
       if (error.code === '23505') {
         throw new HttpException('Email already exist', HttpStatus.BAD_REQUEST);
       } else {
