@@ -16,12 +16,12 @@ export class User {
   password: string;
 
   @Column({ type: 'timestamp', nullable: true })
-  lastLoginTime: string;
+  lastLoginTime: Date;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   registrationTime: string;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ type: 'boolean', default: true })
   status: boolean;
 
   public async hashPassword(password: string): Promise<void> {

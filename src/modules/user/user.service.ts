@@ -26,7 +26,7 @@ export class UserService {
     return paginate<User>(this.userRepository, options, {
       order: {
         name: 'ASC',
-      }
+      },
     });
   }
 
@@ -40,7 +40,7 @@ export class UserService {
 
   async getOne(id: string) {
     const data = await this.userRepository.findOne({
-      where: { id }
+      where: { id },
     });
 
     if (!data) {
@@ -55,6 +55,26 @@ export class UserService {
     return response;
   }
 
+  async deleteMore(ids: string[]) {
+    const response = await this.userRepository
+      .createQueryBuilder()
+      .delete()
+      .where('id IN(:...ids)', { ids })
+      .execute();
+    return response;
+  }
+
+  async updateLoginDate(id: string) {
+    const date = new Date();
+    const response = await this.userRepository.update(
+      { id },
+      {
+        lastLoginTime: date,
+      },
+    );
+    return response;
+  }
+
   async change(value: UpdateUserDto, id: string) {
     const response = await this.userRepository
       .createQueryBuilder()
@@ -65,14 +85,33 @@ export class UserService {
     return response;
   }
 
+  async changeStatus(status: boolean, ids: string[]) {
+    const response = await this.userRepository
+      .createQueryBuilder()
+      .update()
+      .set({ status })
+      .where('id IN(:...ids)', { ids })
+      .execute();
+    return response;
+  }
+
   async create(data: CreateUserDto) {
-    const user = new User();
-    user.name = data.name
-    user.email = data.email
-    await user.hashPassword(data.password);
-    await this.connection.transaction(async (manager: EntityManager) => {
-      await manager.save(user);
-    });
-    return user
+    try {
+      const user = new User();
+      user.name = data.name;
+      user.email = data.email;
+      await user.hashPassword(data.password);
+      await this.connection.transaction(async (manager: EntityManager) => {
+        await manager.save(user);
+      });
+      return user;
+    } catch (error) {
+      console.log(error.detail);
+
+      if (error.code === '23505') {
+        throw new HttpException('Email already exist', HttpStatus.BAD_REQUEST);
+      } else {
+      }
+    }
   }
 }

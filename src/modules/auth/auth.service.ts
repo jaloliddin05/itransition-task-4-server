@@ -25,6 +25,10 @@ export class AuthService {
     if (!isPasswordSame) {
       throw new BadRequestException('Invalid password');
     }
+    if (!user.status) {
+      throw new BadRequestException('You have been blocked by someone');
+    }
+    await this.usersService.updateLoginDate(user.id);
     return user;
   }
 

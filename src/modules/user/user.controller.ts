@@ -66,6 +66,20 @@ export class UserController {
     try {
       return await this.userService.create(data);
     } catch (err) {
+      throw new HttpException(err.message, err.status);
+    }
+  }
+
+  @Patch('/status')
+  @ApiOperation({ summary: 'Method: updating user' })
+  @ApiOkResponse({
+    description: 'User was changed',
+  })
+  @HttpCode(HttpStatus.OK)
+  async changeStatus(@Body() data) {
+    try {
+      return await this.userService.changeStatus(data.status, data.ids);
+    } catch (err) {
       throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -96,6 +110,20 @@ export class UserController {
   async deleteData(@Param('id') id: string) {
     try {
       return await this.userService.deleteOne(id);
+    } catch (err) {
+      throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  @Delete('/')
+  @ApiOperation({ summary: 'Method: deleting users' })
+  @ApiOkResponse({
+    description: 'User was deleted',
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteMore(@Body() data) {
+    try {
+      return await this.userService.deleteMore(data.ids);
     } catch (err) {
       throw new HttpException(err.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
