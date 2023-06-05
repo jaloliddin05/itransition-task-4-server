@@ -27,7 +27,8 @@ export default (): IConfig => ({
     // cli: {
     //   migrationsDir: 'src/migrations/scripts',
     // },
-    dialectOptions: {
+    ssl: true,
+    extra: {
       ssl: {
         rejectUnauthorized: false,
       },
