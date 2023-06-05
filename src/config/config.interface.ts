@@ -24,6 +24,7 @@ interface IDatabase {
   cli?: {
     migrationsDir?: string;
   };
+  dialectOptions: any;
 }
 
 export interface IConfig {
