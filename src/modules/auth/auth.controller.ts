@@ -58,6 +58,7 @@ export class AuthController {
     response.cookie(ACCESS_TOKEN_USER, accessToken, accessTokenOptions);
     response.cookie(REFRESH_TOKEN_USER, refreshToken, refreshTokenOptions);
     response.cookie('userId', user.id, accessTokenOptions);
+    return { accessToken, refreshToken, userId: user.id };
   }
 
   @Public()
