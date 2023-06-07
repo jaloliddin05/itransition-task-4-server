@@ -20,7 +20,7 @@ export class AccessTokenUserStrategy extends PassportStrategy(
   ) {
     const jwtConfig = configService.getOrThrow('jwt');
     super({
-      jwtFromRequest: (req: Request) => req.headers[ACCESS_TOKEN_USER],
+      jwtFromRequest: (req: Request) => req.cookies[ACCESS_TOKEN_USER],
       ignoreExpiration: false,
       secretOrKey: jwtConfig.accessTokenSecret,
     });

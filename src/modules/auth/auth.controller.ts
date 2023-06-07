@@ -26,7 +26,7 @@ import { RefreshTokenUserGuard } from './passport-stratagies/refresh-token-user/
 import { REFRESH_TOKEN_USER } from './passport-stratagies/refresh-token-user/refresh-token-user.strategy';
 
 const accessTokenOptions: CookieOptions = {
-  secure: true,
+  secure: false,
   sameSite: 'none',
   maxAge: 31536000000,
 };
